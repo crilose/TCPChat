@@ -5,6 +5,7 @@
  */
 package Connection;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -38,9 +39,12 @@ public class ServerConnessioneTCP {
                 System.out.println("Connessione stabilita!");
                 System.out.println("Socket server: " + connection.getLocalSocketAddress());
                 System.out.println("Socket client: " + connection.getRemoteSocketAddress());
+                //InputStream per la ricezione dei dati
+                DataInputStream dIn = new DataInputStream(connection.getInputStream());
+                System.out.println("Messaggio dal client: " + dIn.readUTF());
             }
                catch(IOException e){
-                   System.err.println("Errore di I/O!");
+                   System.err.println(e);
             }
             
             //chiusura della connessione con il client
@@ -49,7 +53,7 @@ public class ServerConnessioneTCP {
             } catch (IOException ex) {
                 System.err.println("Errore nella chiusura della connessione!");
             }
-            System.out.println("Connessione chiusa!");
+            System.out.println("Connessione chiusa lato server!");
         }
       }
 }
