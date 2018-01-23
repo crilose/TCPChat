@@ -32,6 +32,9 @@ public class ClientConnessioneTCP {
         Scanner input;
         //Thread per l'ascolto dei messaggi
         Listener listen;
+        
+        String username;
+        String othername;
 
         //apertura della connessione al server sulla porta specificata
         try{
@@ -42,12 +45,18 @@ public class ClientConnessioneTCP {
             //Realizzo la connessione vera e propria tramite ip e porta
             connection = new Socket(serverAddress, port);
             System.out.println("Connessione aperta");
+            
             //OutputStream per l'invio dei dati
             DataOutputStream dOut = new DataOutputStream(connection.getOutputStream());
             //InputStream per la ricezione dei dati
             DataInputStream dIn = new DataInputStream(connection.getInputStream());
             //Istanzio anche il thread listener e lo avvio
-            listen = new Listener(dIn,"Server: ");
+            System.out.println("Inserisci il tuo username: ");
+            username = input.nextLine();
+            dOut.writeUTF(username);
+            dOut.flush();
+            othername = dIn.readUTF();
+            listen = new Listener(dIn,othername + ": ");
             listen.start();
             //Mentre la connessione è attiva prendo i messaggi che scrivo e li invio
             while(connection.isConnected())
