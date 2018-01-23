@@ -34,6 +34,9 @@ public class ServerConnessioneTCP {
         Listener listen;
         //Scanner per l'input di una stringa
         Scanner input;
+        
+        String username;
+        String othername;
 
         while(true){
             try{
@@ -53,7 +56,12 @@ public class ServerConnessioneTCP {
                 //InputStream per la ricezione dei dati
                 DataInputStream dIn = new DataInputStream(connection.getInputStream());
                 //Istanzio anche il thread listener e lo avvio
-                listen = new Listener(dIn,"Client: ");
+                System.out.println("Inserisci il tuo username: ");
+                username = input.nextLine();
+                dOut.writeUTF(username);
+                dOut.flush();
+                othername = dIn.readUTF();
+                listen = new Listener(dIn,othername + ": ");
                 listen.start();
                 //Mentre la connessione è attiva prendo i messaggi che scrivo e li invio
                 while(connection.isConnected())
