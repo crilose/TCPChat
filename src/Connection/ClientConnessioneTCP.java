@@ -12,76 +12,102 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.net.ConnectException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Monica Ciuchetti
  */
 public class ClientConnessioneTCP {
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args){
-        //oggetto da usare per realizzare la connessione TCP
-        Socket connection = null;
-        //nome o IP del server
-        String serverAddress = "localhost";
-        //porta del server in ascolto
-        int port = 2000;
-        //Scanner per l'input di una stringa
-        Scanner input;
-        //Thread per l'ascolto dei messaggi
-        Listener listen;
+    
+    //oggetto da usare per realizzare la connessione TCP
+    Socket connection = null;
+    //nome o IP del server
+    String serverAddress = "localhost";
+    //porta del server in ascolto
+    int port = 2000;
+    //Scanner per l'input di una stringa
+    Scanner input;
+    //Thread per l'ascolto dei messaggi
+    Listener listen;
+    String username;
+    String othername;
+    String msg = "";
+    DataOutputStream dOut;
+    DataInputStream dIn;
+    
+    
+    public void startConnection()
+    {
         
-        String username;
-        String othername;
-
-        //apertura della connessione al server sulla porta specificata
-        try{
-            //inizializzo il messaggio che invieremo
-            String msg = "";
+        
+        try {
             //Istanzio lo scanner
             input = new Scanner(System.in);
             //Realizzo la connessione vera e propria tramite ip e porta
             connection = new Socket(serverAddress, port);
             System.out.println("Connessione aperta");
-            
             //OutputStream per l'invio dei dati
-            DataOutputStream dOut = new DataOutputStream(connection.getOutputStream());
+            dOut = new DataOutputStream(connection.getOutputStream());
             //InputStream per la ricezione dei dati
-            DataInputStream dIn = new DataInputStream(connection.getInputStream());
-            //Istanzio anche il thread listener e lo avvio
-            System.out.println("Inserisci il tuo username: ");
-            username = input.nextLine();
-            dOut.writeUTF(username);
-            dOut.flush();
-            othername = dIn.readUTF();
-            listen = new Listener(dIn,othername + ": ");
-            listen.start();
-            //Mentre la connessione è attiva prendo i messaggi che scrivo e li invio
-            while(connection.isConnected())
-            {
-                msg = input.nextLine();
-                dOut.writeUTF(msg);
-                dOut.flush();
-            }
+            dIn = new DataInputStream(connection.getInputStream());
             
-        }
-        catch(ConnectException e){
+            
+        }catch(ConnectException e){
             System.err.println("Server non disponibile!");
         }
         catch(UnknownHostException e1){
             System.err.println("Errore DNS!");
+            
+        } catch (IOException ex) {
+            System.err.println(ex);
         }
-
-        catch(IOException e2){//
-            System.err.println(e2);
-            e2.printStackTrace();
+        
+        
+    }
+    
+    public void setUsername()
+    {
+            try {
+                System.out.println("Inserisci il tuo username: ");
+                username = input.nextLine();
+                dOut.writeUTF(username);
+                dOut.flush();
+                othername = dIn.readUTF();
+                
+            } catch (IOException ex) {
+                System.err.println(ex);
+            }
+            
+            
+        
+    }
+       
+    public void communicate()
+    {
+        //Istanzio anche il thread listener e lo avvio
+        listen = new Listener(dIn,othername + ": ");
+        listen.start();
+        //Mentre la connessione è attiva prendo i messaggi che scrivo e li invio
+        while(connection.isConnected())
+        {     
+            try {
+                msg = input.nextLine();
+                dOut.writeUTF(msg);
+                dOut.flush();
+                
+                
+            } catch (IOException ex) {
+                System.err.println(ex);
+            }
+                
         }
-
-        //chiusura della connnessione
-        finally{
-                try {
+    }
+    
+    public void closeConnection()
+    {
+        try {
             if (connection!=null)
                 {
                     connection.close();
@@ -91,6 +117,5 @@ public class ClientConnessioneTCP {
             catch(IOException e){
                 System.err.println("Errore nella chiusura della connessione!");
             }
-        }
     }
 }
