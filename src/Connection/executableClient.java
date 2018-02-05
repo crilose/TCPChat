@@ -5,13 +5,13 @@
  */
 package Connection;
 
+
 /**
  *
  * @author Cristiano
  */
 public class executableClient {
-    
-    public static void main(String[] args) {
+public static void main(String[] args) {
         
         ClientConnessioneTCP client = new ClientConnessioneTCP();
         client.startConnection();

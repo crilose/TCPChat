@@ -87,13 +87,13 @@ public class ServerConnessioneTCP {
     public void communicate()
     {
         //Istanzio anche il thread listener e lo avvio
-        listen = new Listener(dIn,othername + ": ");
+        listen = new Listener(dIn);
         listen.start();
         //Mentre la connessione è attiva prendo i messaggi che scrivo e li invio
         while(connection.isConnected())
         {     
             try {
-                Messaggio msg = new Messaggio(username,"testo",(char)27 + "[35m");
+                Messaggio msg = new Messaggio(username,(char)27 + "[35m",this);
                 dOut.writeUTF(msg.scrivi() + "\u001B[0m");
                 dOut.flush();
                 

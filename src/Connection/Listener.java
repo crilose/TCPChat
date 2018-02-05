@@ -17,12 +17,10 @@ import java.util.logging.Logger;
 public class Listener extends Thread{
     
     private DataInputStream input;
-    private String from;
     
-    public Listener(DataInputStream in, String type)
+    public Listener(DataInputStream in)
     {
         this.input = in;
-        from = type;
     }
     
     public void run()
