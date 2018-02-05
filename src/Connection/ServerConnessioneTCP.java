@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Monica Ciuchetti
+ * @author Cristiano Ceccarelli
  */
 public class ServerConnessioneTCP {
     
@@ -93,8 +93,8 @@ public class ServerConnessioneTCP {
         while(connection.isConnected())
         {     
             try {
-                msg = input.nextLine();
-                dOut.writeUTF(msg);
+                Messaggio msg = new Messaggio(username,"testo",(char)27 + "[35m");
+                dOut.writeUTF(msg.scrivi() + "\u001B[0m");
                 dOut.flush();
                 
                 

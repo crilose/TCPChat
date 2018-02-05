@@ -32,25 +32,13 @@ public class Listener extends Thread{
             try {
                 if(input.available()>0)
                 {
-                    System.out.println(from + input.readUTF());
+                    System.out.println(input.readUTF());
                 }
             } catch (IOException ex) {
                 Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
-    
-    public void setType(String t)
-    {
-        if(t.contentEquals("client"))
-        {
-            from = "Server: ";
-        }
-        
-        if(t.contentEquals("server"))
-        {
-            from = "Client: ";
-        }
-    }
+
     
 }

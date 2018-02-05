@@ -93,8 +93,8 @@ public class ClientConnessioneTCP {
         while(connection.isConnected())
         {     
             try {
-                msg = input.nextLine();
-                dOut.writeUTF(msg);
+                Messaggio msg = new Messaggio(username,"testo",(char)27 + "[34m");
+                dOut.writeUTF(msg.scrivi() + "\u001B[0m");
                 dOut.flush();
                 
                 
