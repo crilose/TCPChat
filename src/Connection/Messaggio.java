@@ -42,11 +42,13 @@ public class Messaggio {
         contenuto = input.nextLine();
         if(checkCommand(contenuto)==true)
         {
+            System.out.println(colore + fromuser + " ha eseguito un comando.");
             return (colore + fromuser + " ha eseguito un comando.");
             
         }
         else
         {
+            System.out.println(colore + fromuser + ": " + contenuto);
             return (colore + fromuser + ": " + contenuto);
         }
     }
@@ -65,7 +67,7 @@ public class Messaggio {
     
     public boolean checkCommand(String msg)
     {
-        if(msg.contentEquals("username"))
+        if(msg.contentEquals("/username"))
         {
             if(checkUser()==1)
             {

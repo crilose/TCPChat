@@ -69,19 +69,8 @@ public class ClientConnessioneTCP {
     
     public void setUsername()
     {
-            try {
-                System.out.println("Inserisci il tuo username: ");
-                username = input.nextLine();
-                dOut.writeUTF(username);
-                dOut.flush();
-                othername = dIn.readUTF();
-                
-            } catch (IOException ex) {
-                System.err.println(ex);
-            }
-            
-            
-        
+        System.out.println("Inserisci il tuo username: ");
+        username = input.nextLine();
     }
        
     public void communicate()
