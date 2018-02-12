@@ -67,7 +67,7 @@ public class Messaggio {
     
     public boolean checkCommand(String msg)
     {
-        //Se rilevo il comando per cambiare username
+        //Se rilevo un comando
         switch(msg)
         {
             case "/username":
