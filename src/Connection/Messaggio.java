@@ -67,21 +67,22 @@ public class Messaggio {
     
     public boolean checkCommand(String msg)
     {
-        if(msg.contentEquals("/username"))
+        //Se rilevo il comando per cambiare username
+        switch(msg)
         {
-            if(checkUser()==1)
-            {
-                clientobj.setUsername();
-            }
-            else
-            {
-                serverobj.setUsername();
-            }
-            return true;
-        }
-        else
-        {
-            return false;
+            case "/username":
+                if(checkUser()==1)
+                {
+                    clientobj.setUsername();
+                }
+                else
+                {
+                    serverobj.setUsername();
+                }
+                return true;
+                
+            default:
+                return false;
         }
     }
 }
