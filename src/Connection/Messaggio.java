@@ -81,6 +81,19 @@ public class Messaggio {
                 }
                 return true;
                 
+            case "/end":
+                
+                if(checkUser()==1)
+                {
+                    clientobj.closeConnection();
+                }
+                else
+                {
+                    serverobj.closeConnection();
+                }
+                return true;
+                
+                
             default:
                 return false;
         }
