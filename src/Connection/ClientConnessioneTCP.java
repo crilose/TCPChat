@@ -107,4 +107,14 @@ public class ClientConnessioneTCP {
                 System.err.println("Errore nella chiusura della connessione!");
             }
     }
+    
+    public void online()
+    {
+        listen.changeState(0);
+    }
+    
+    public void offline()
+    {
+        listen.changeState(1);
+    }
 }

@@ -17,10 +17,12 @@ import java.util.logging.Logger;
 public class Listener extends Thread{
     
     private DataInputStream input;
+    private int state;
     
     public Listener(DataInputStream in)
     {
         this.input = in;
+        state = 0;
     }
     
     public void run()
@@ -28,7 +30,7 @@ public class Listener extends Thread{
         while(true)
         {
             try {
-                if(input.available()>0)
+                if(input.available()>0 && state == 0)
                 {
                     System.out.println(input.readUTF());
                 }
@@ -37,6 +39,14 @@ public class Listener extends Thread{
             }
         }
     }
+    
+    public void changeState(int stato)
+    {
+        state = stato;
+        //0 per online, 1 per offline
+    }
+            
+            
 
     
 }

@@ -107,4 +107,14 @@ public class ServerConnessioneTCP {
             }
             System.out.println("Connessione chiusa lato client!");
     }
+    
+    public void online()
+    {
+        listen.changeState(0); //0 per online
+    }
+    
+    public void offline()
+    {
+        listen.changeState(1); //1 per offline
+    }
 }
