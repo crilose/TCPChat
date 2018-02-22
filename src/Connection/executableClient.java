@@ -18,7 +18,6 @@ public static void main(String[] args) {
         client.setUsername();
         while(true){
             client.communicate();
-            client.closeConnection();
         }
       }
     

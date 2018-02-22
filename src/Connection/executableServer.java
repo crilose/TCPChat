@@ -20,7 +20,6 @@ public class executableServer {
         server.setUsername();
         while(true){
             server.communicate();
-            server.closeConnection();
         }
       }
 }
