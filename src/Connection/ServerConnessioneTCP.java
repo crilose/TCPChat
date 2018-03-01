@@ -102,6 +102,7 @@ public class ServerConnessioneTCP {
         //chiusura della connessione con il client
             try {
                 if (sSocket!=null) sSocket.close();
+                connection.close();
             } catch (IOException ex) {
                 System.err.println("Errore nella chiusura della connessione!");
             }
