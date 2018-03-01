@@ -5,8 +5,14 @@
  */
 package Connection;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -21,6 +27,7 @@ import java.util.logging.Logger;
  */
 public class ClientConnessioneTCP {
     
+    public final static int FILE_SIZE = Integer.MAX_VALUE; //max filesize
     //oggetto da usare per realizzare la connessione TCP
     Socket connection = null;
     //nome o IP del server
@@ -36,6 +43,10 @@ public class ClientConnessioneTCP {
     String msg = "";
     DataOutputStream dOut;
     DataInputStream dIn;
+    FileInputStream filestream = null;
+    BufferedInputStream filebuffer = null;
+    BufferedOutputStream outfilebuffer = null;
+    FileOutputStream recfilestream = null;
     
     
     public void startConnection()
@@ -116,5 +127,52 @@ public class ClientConnessioneTCP {
     public void offline()
     {
         listen.changeState(1);
+    }
+    
+    public void sendFile()
+    {
+        System.out.println("Inserisci il nome del file: ");
+        String filename = input.nextLine();
+        File filetosend = new File (filename);
+        byte [] bytearray  = new byte [(int)filetosend.length()];
+        try {
+            filestream = new FileInputStream(filetosend);
+        } catch (FileNotFoundException ex) {
+            //error
+        }
+        filebuffer = new BufferedInputStream(filestream); //wrapping
+        try {
+            dOut.write(bytearray,0,bytearray.length);
+            dOut.flush();
+        } catch (IOException ex) {
+            //error
+        }
+    }
+    
+    public void receiveFile()
+    {
+        int bytesRead = 0;
+        int current = 0;
+        byte [] receivedbyte  = new byte [FILE_SIZE];
+        try {
+            recfilestream = new FileOutputStream("received");
+            outfilebuffer = new BufferedOutputStream(recfilestream);
+            bytesRead = dIn.read(receivedbyte,0,receivedbyte.length);
+            current = bytesRead;
+            do {
+                bytesRead = dIn.read(receivedbyte, current, (receivedbyte.length-current));
+                if(bytesRead >= 0) current += bytesRead;
+                }
+            while(bytesRead > -1);
+            outfilebuffer.write(receivedbyte, 0 , current);
+            outfilebuffer.flush();
+            
+        } catch (FileNotFoundException ex) {
+            //error
+        }
+        catch (IOException ex) {
+            //error
+        }  
+      
     }
 }

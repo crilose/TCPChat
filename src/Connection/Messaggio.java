@@ -44,31 +44,27 @@ public class Messaggio {
         //Se abbiamo eseguito un comando
         if(checkCommand(contenuto)==true)
         {
-            if(stato>=2) //Se lo stato è default, cioè 2: operazione non di cambio stato
+            switch (stato)
             {
+                case 2:
                 System.out.println(colore + fromuser + " ha eseguito un comando.");
                 return (colore + fromuser + " ha eseguito un comando.");
-            }
-            else
-            {
-                if(stato==0) //Se lo stato è 0, cioè: connessione ripresa (tornare online)
-                {
+                
+                case 0: 
                     System.out.println(colore + fromuser + " è andato online.");
                     return (colore + fromuser + " è andato online.");
-                }
-                else //Se lo stato è 1, cioè: connessione interrotta (andare offline)
-                {
+                    
+                case 1:
                     System.out.println(colore + fromuser + " è andato offline.");
                     return (colore + fromuser + " è andato offline.");
-                }
             }
-            
         }
-        else //altrimenti stampa il messaggio ricevuto
+        else
         {
             System.out.println(colore + fromuser + ": " + contenuto); //Sia sul nostro output
             return (colore + fromuser + ": " + contenuto); //che sullo stream
         }
+        return "ok";
     }
     
     //Controlla il tipo di utente, se 1 è un client, se 0 è un server
@@ -138,8 +134,20 @@ public class Messaggio {
                 }
                 return true;
                 
+            case "/sendfile":
+                stato = 3; //stato sendfile
+                if(checkUser()==1)
+                {
+                    clientobj.sendFile();
+                }
+                else
+                {
+                    serverobj.sendFile();
+                }
+                return true;
+                
             default:
-                stato = 2;
+                stato = 6;
                 return false;
         }
     }
