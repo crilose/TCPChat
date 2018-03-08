@@ -90,7 +90,7 @@ public class ServerConnessioneTCP {
     public void communicate()
     {
         //Istanzio anche il thread listener e lo avvio
-        listen = new Listener(dIn);
+        listen = new Listener(dIn,this);
         listen.start();
         //Mentre la connessione è attiva prendo i messaggi che scrivo e li invio
         while(connection.isConnected())
@@ -132,20 +132,20 @@ public class ServerConnessioneTCP {
     
     public void sendFile()
     {
+         try{
+            
+        dOut.writeUTF("sendfile");
         System.out.println("Inserisci il nome del file: ");
         String filename = input.nextLine();
         File filetosend = new File (filename);
         byte [] bytearray  = new byte [(int)filetosend.length()];
-        try {
-            filestream = new FileInputStream(filetosend);
-        } catch (FileNotFoundException ex) {
-            //error
-        }
+        filestream = new FileInputStream(filetosend);
         filebuffer = new BufferedInputStream(filestream); //wrapping
-        try {
-            dOut.write(bytearray,0,bytearray.length);
-            dOut.flush();
-        } catch (IOException ex) {
+        dOut.write(bytearray,0,bytearray.length);
+        dOut.flush();
+        System.out.println("Fatto!");
+        } 
+        catch (IOException ex) {
             //error
         }
     }
@@ -156,7 +156,8 @@ public class ServerConnessioneTCP {
         int current = 0;
         byte [] receivedbyte  = new byte [FILE_SIZE];
         try {
-            recfilestream = new FileOutputStream("received");
+            File outputFile = new File("receivedfile");
+            recfilestream = new FileOutputStream(outputFile);
             outfilebuffer = new BufferedOutputStream(recfilestream);
             bytesRead = dIn.read(receivedbyte,0,receivedbyte.length);
             current = bytesRead;
@@ -167,6 +168,7 @@ public class ServerConnessioneTCP {
             while(bytesRead > -1);
             outfilebuffer.write(receivedbyte, 0 , current);
             outfilebuffer.flush();
+            System.out.println("File ricevuto");
             
         } catch (FileNotFoundException ex) {
             //error

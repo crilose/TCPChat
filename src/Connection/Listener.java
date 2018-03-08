@@ -18,11 +18,22 @@ public class Listener extends Thread{
     
     private DataInputStream input;
     private int state;
+    String received;
+    ClientConnessioneTCP clientobj;
+    ServerConnessioneTCP serverobj;
     
-    public Listener(DataInputStream in)
+    public Listener(DataInputStream in,ClientConnessioneTCP client)
     {
         this.input = in;
         state = 0;
+        clientobj = client;
+    }
+    
+    public Listener(DataInputStream in,ServerConnessioneTCP server)
+    {
+        this.input = in;
+        state = 0;
+        serverobj = server;
     }
     
     public void run()
@@ -32,13 +43,39 @@ public class Listener extends Thread{
             try {
                 if(input.available()>0 && state == 0)
                 {
-                    System.out.println(input.readUTF());
+                    received = input.readUTF();
+                    if(received.contentEquals("sendfile"))
+                    {
+                        if(checkUser()==1)
+                        {
+                            clientobj.receiveFile();
+                        }
+                        else
+                        {
+                            serverobj.receiveFile();
+                        }
+                    }
+                    System.out.println(received);
+                    
                 }
             } catch (IOException ex) {
                 Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
+    
+    public int checkUser()
+    {
+        if(clientobj!=null)
+        {
+            return 1; //client
+        }
+        else
+        {
+            return 0; //server
+        }
+    }
+    
     
     public void changeState(int stato)
     {
