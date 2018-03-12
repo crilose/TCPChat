@@ -93,9 +93,12 @@ public class ClientConnessioneTCP {
         while(connection.isConnected())
         {     
             try {
-                Messaggio msg = new Messaggio(username,(char)27 + "[34m",this);
-                dOut.writeUTF(msg.scrivi() + "\u001B[0m");
-                dOut.flush();
+                if(listen.getStato()==0 || input.next().contentEquals("/online"))
+                {
+                    Messaggio msg = new Messaggio(username,(char)27 + "[34m",this);
+                    dOut.writeUTF(msg.scrivi() + "\u001B[0m");
+                    dOut.flush();
+                }
                 
                 
                 

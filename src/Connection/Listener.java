@@ -82,6 +82,11 @@ public class Listener extends Thread{
         state = stato;
         //0 per online, 1 per offline
     }
+    
+    public int getStato()
+    {
+        return state;
+    }
             
             
 
