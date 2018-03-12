@@ -64,7 +64,13 @@ public class Messaggio {
             System.out.println(colore + fromuser + ": " + contenuto); //Sia sul nostro output
             return (colore + fromuser + ": " + contenuto); //che sullo stream
         }
-        return "ok";
+        return "";
+    }
+    
+    public String scriviSmile()
+    {
+        System.out.println(colore + fromuser + ": " + ":)"); //Sia sul nostro output
+        return (colore + fromuser + ": " + ":)"); //che sullo stream
     }
     
     //Controlla il tipo di utente, se 1 è un client, se 0 è un server
@@ -78,6 +84,11 @@ public class Messaggio {
         {
             return 0; //server
         }
+    }
+    
+    public String getColore()
+    {
+        return colore;
     }
     
     public boolean checkCommand(String msg)
@@ -143,6 +154,18 @@ public class Messaggio {
                 else
                 {
                     serverobj.sendFile();
+                }
+                return true;
+                
+            case "/smile":
+                stato = 4; //stato smile
+                if(checkUser()==1)
+                {
+                    clientobj.sendSmile();
+                }
+                else
+                {
+                    serverobj.sendSmile();
                 }
                 return true;
                 

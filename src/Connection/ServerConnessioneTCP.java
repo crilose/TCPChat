@@ -98,7 +98,7 @@ public class ServerConnessioneTCP {
             try {
                 if(listen.getStato()==0 || input.next().contentEquals("/online"))
                 {
-                    Messaggio msg = new Messaggio(username,(char)27 + "[35m",this);
+                    Messaggio msg = new Messaggio(username,(char)27 + "[34m",this);
                     dOut.writeUTF(msg.scrivi() + "\u001B[0m");
                     dOut.flush();
                 }
@@ -121,6 +121,17 @@ public class ServerConnessioneTCP {
                 System.err.println("Errore nella chiusura della connessione!");
             }
             System.out.println("Connessione chiusa lato client!");
+    }
+    
+    public void sendSmile()
+    {
+        try {
+            Messaggio msg = new Messaggio(username,(char)27 + "[34m",this);
+            dOut.writeUTF(msg.scriviSmile() + "\u001B[0m");
+            dOut.flush();
+        } catch (IOException ex) {
+           //errore
+        }
     }
     
     public void online()

@@ -95,7 +95,7 @@ public class ClientConnessioneTCP {
             try {
                 if(listen.getStato()==0 || input.next().contentEquals("/online"))
                 {
-                    Messaggio msg = new Messaggio(username,(char)27 + "[34m",this);
+                    Messaggio msg = new Messaggio(username,(char)27 + "[35m",this);
                     dOut.writeUTF(msg.scrivi() + "\u001B[0m");
                     dOut.flush();
                 }
@@ -150,6 +150,18 @@ public class ClientConnessioneTCP {
         } 
         catch (IOException ex) {
             //error
+        }
+    }
+    
+    public void sendSmile()
+    {
+        try {
+            Messaggio msg = new Messaggio(username,(char)27 + "[35m",this);
+            dOut.writeUTF(msg.scriviSmile() + "\u001B[0m");
+            dOut.flush();
+
+        } catch (IOException ex) {
+           //errore
         }
     }
     
