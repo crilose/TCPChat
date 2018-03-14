@@ -8,8 +8,13 @@ package Connection;
 
 /**
  *
- * @author Cristiano
+ * La classe eseguibile del client.
+ * 
+ * Questa classe istanzia un oggetto client, avvia la sua connessione, imposta il suo username
+ * e si mette in perenne stato di comunicazione mediante un ciclo while.
+ * @author Cristiano Ceccarelli
  */
+
 public class executableClient {
 public static void main(String[] args) {
         

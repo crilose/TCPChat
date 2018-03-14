@@ -24,44 +24,53 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * La classe Server.
+ * 
+ * Questa classe implementa tutti i metodi necessari per la comunicazione TCP
+ * con un client, avvia la comunicazione, la interrompe, gestisce l'invio di messaggi, l'esecuzione
+ * del listener e le eccezioni di rete che si possono verificare.
  *
  * @author Cristiano Ceccarelli
  */
 public class ServerConnessioneTCP {
+
     
-    // porta del server maggiore di 1024 
-        int port=2000;
-        //oggetto ServerSocket necessario per accettare richieste dal client
-        ServerSocket sSocket = null;
-        //oggetto da usare per realizzare la connessione TCP
-        Socket connection;
-        //Thread per l'ascolto dei messaggi
-        Listener listen;
-        //Scanner per l'input di una stringa
-        Scanner input;
+        int port=2000; /** La porta utilizzata per l'ascolto in ricezione. */
+        ServerSocket sSocket = null; /** Oggetto ServerSocket necessario per accettare richieste dal client. */
+        Socket connection;  /** Oggetto da usare per realizzare la connessione TCP.*/
+        Listener listen; /** Oggetto Listener per l'ascolto dei messaggi. */
+        Scanner input; /**Scanner per l'input di stringhe. */
+        
+        /** Vengono dichiarati gli stream di input ed output. */
         DataOutputStream dOut;
         DataInputStream dIn;
-        String username;
-        String othername;
-        String msg = "";
+        String username; /** Il proprio username. */
+        /** Gli stream per la lettura e l'invio di file. */
         FileInputStream filestream = null;
         BufferedInputStream filebuffer = null;
         BufferedOutputStream outfilebuffer = null;
         FileOutputStream recfilestream = null;
     
     
+   /**
+ * Avvia la connessione mediante l'utilizzo di un Socket.
+ * <p>
+ * Questo metodo viene utilizzato per avviare l'ascolto su una porta in attesa
+ * di un client interessato a collegarsi. Una volta stabilita la connessione
+ * si istanziano anche gli stream di input ed output per l'invio e la ricezione
+ * di dati.
+ *
+ * @return      void
+ */
     public void startConnection()
     {
             try {
-                // il server si mette in ascolto sulla porta voluta
-                sSocket = new ServerSocket(port);
+                sSocket = new ServerSocket(port); /**Il server si mette in ascolto sulla porta voluta */
                 System.out.println("In attesa di connessioni!");
                 input = new Scanner(System.in);
-                //si è stabilita la connessione
+                /**Si è stabilita la connessione */
                 connection = sSocket.accept();
-                //OutputStream per l'invio dei dati
                 dOut = new DataOutputStream(connection.getOutputStream());
-                //InputStream per la ricezione dei dati
                 dIn = new DataInputStream(connection.getInputStream());
                 
                 
@@ -72,27 +81,49 @@ public class ServerConnessioneTCP {
             
     }
     
+        /**
+ * Visualizza le informazioni di stato sulla connessione attuale
+ * <p>
+ * Questo metodo si utilizza per stampare a schermo le informazioni principali sulla
+ * connessione in atto: indirizzo ip e porta del client, indirizzo ip e porta del server.
+ *
+ * @return      void
+ */
+    
     public void getInfo()
     {
-        //Stampo le informazioni sulla connessione
                 System.out.println("Connessione stabilita!");
                 System.out.println("Socket server: " + connection.getLocalSocketAddress());
                 System.out.println("Socket client: " + connection.getRemoteSocketAddress());
     }
     
+ /**
+ * Imposta il proprio nome utente
+ * <p>
+ * Questo metodo si utilizza per impostare il proprio nome utente da utilizzare
+ * nella comunicazione.
+ * @return      void
+ */
     public void setUsername()
     {
         System.out.println("Inserisci il tuo username: ");
         username = input.nextLine();
         
     }
+
+ /**
+ * Comunicazione testuale
+ * <p>
+ * Questo metodo si utilizza per comunicare inviando e ricevendo le stringhe testuali oggetto
+ * della conversazione.
+ * @return      void
+ */
     
     public void communicate()
     {
-        //Istanzio anche il thread listener e lo avvio
         listen = new Listener(dIn,this);
         listen.start();
-        //Mentre la connessione è attiva prendo i messaggi che scrivo e li invio
+        /**Mentre la connessione è attiva prendo i messaggi che scrivo e li invio*/
         while(connection.isConnected())
         {     
             try {
@@ -111,9 +142,15 @@ public class ServerConnessioneTCP {
         }
     }
     
+ /**
+ * Chiusura della connessione
+ * <p>
+ * Questo metodo si utilizza per interrompere la comunicazione.
+ * @return      void
+ */
     public void closeConnection()
     {
-        //chiusura della connessione con il client
+        /** Chiusura della connessione */
             try {
                 if (sSocket!=null) sSocket.close();
                 connection.close();
@@ -122,7 +159,14 @@ public class ServerConnessioneTCP {
             }
             System.out.println("Connessione chiusa lato client!");
     }
-    
+
+ /**
+ * Invio di uno smile
+ * <p>
+ * Questo metodo si utilizza per inviare uno smile come messaggio
+ * all'utente client collegato.
+ * @return      void
+ */    
     public void sendSmile()
     {
         try {
@@ -133,17 +177,38 @@ public class ServerConnessioneTCP {
            //errore
         }
     }
-    
+
+/**
+ * Stato online
+ * <p>
+ * Questo metodo si utilizza per riprendere la comunicazione dopo essere
+ * andati temporaneamente offline.
+ * @return      void
+ */
     public void online()
     {
-        listen.changeState(0); //0 per online
+        listen.changeState(0); /** 0 Significa online */
     }
-    
+
+    /**
+ * Stato offline
+ * <p>
+ * Questo metodo si utilizza per interrompere momentaneamente l'invio
+ * e la ricezione di messaggi.
+ * @return      void
+ */
     public void offline()
     {
-        listen.changeState(1); //1 per offline
+        listen.changeState(1); /** 1 Significa offline */
     }
-    
+ 
+/**
+ * Invio di un file
+ * <p>
+ * Questo metodo si utilizza per inviare un file specificandone il nome
+ * e il percorso.
+ * @return      void
+ */
     public void sendFile()
     {
          try{
@@ -154,7 +219,7 @@ public class ServerConnessioneTCP {
         File filetosend = new File (filename);
         byte [] bytearray  = new byte [(int)filetosend.length()];
         filestream = new FileInputStream(filetosend);
-        filebuffer = new BufferedInputStream(filestream); //wrapping
+        filebuffer = new BufferedInputStream(filestream); /** Wrapping delle classi */
         dOut.write(bytearray,0,bytearray.length);
         dOut.flush();
         System.out.println("Fatto!");
@@ -163,7 +228,16 @@ public class ServerConnessioneTCP {
             //error
         }
     }
-    
+
+    /**
+ * Ricezione di un file
+ * <p>
+ * Questo metodo si utilizza per ricevere un file e salvarlo
+ * sul proprio disco con un nome predefinito, da dover poi
+ * rinominare per leggerne le informazioni effettivamente ricevute
+ * nel formato corretto.
+ * @return      void
+ */
     public void receiveFile()
     {
         int bytesRead = 0;
@@ -191,5 +265,24 @@ public class ServerConnessioneTCP {
             //error
         }  
       
+    }
+
+/**
+ * Echo del messaggio ricevuto
+ * <p>
+ * Questo metodo si utilizza per inviare all'interlocutore
+ * una copia esatta dell'ultimo messaggio ricevuto.
+ * @return      void
+ */
+    public void echo()
+    {
+            try {
+                String received = listen.getLastMsg();
+                Messaggio msg = new Messaggio(username,(char)27 + "[34m",this);
+                dOut.writeUTF(msg.echoString(received) + "\u001B[0m");
+                dOut.flush();
+            } catch (IOException ex) {
+                //eccezione
+            }
     }
 }
