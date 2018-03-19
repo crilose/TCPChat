@@ -237,8 +237,9 @@ public class ClientConnessioneTCP {
  * nel formato corretto.
  * @return      void
  */
-    public void receiveFile()
+    public void receiveFile() throws IOException
     {
+        
         int bytesRead = 0;
         int current = 0;
         byte [] receivedbyte  = new byte [FILE_SIZE];
@@ -256,13 +257,8 @@ public class ClientConnessioneTCP {
             outfilebuffer.write(receivedbyte, 0 , current);
             outfilebuffer.flush();
             System.out.println("File ricevuto");
-            recfilestream.close();
-            outfilebuffer.close();
             
         } catch (FileNotFoundException ex) {
-            //error
-        }
-        catch (IOException ex) {
             //error
         }  
       
@@ -278,6 +274,7 @@ public class ClientConnessioneTCP {
  */    
     public void echo()
     {
+        
             try {
                 String received = listen.getLastMsg();
                 Messaggio msg = new Messaggio(username,(char)27 + "[35m",this);
