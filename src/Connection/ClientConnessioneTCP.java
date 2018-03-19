@@ -256,6 +256,8 @@ public class ClientConnessioneTCP {
             outfilebuffer.write(receivedbyte, 0 , current);
             outfilebuffer.flush();
             System.out.println("File ricevuto");
+            recfilestream.close();
+            outfilebuffer.close();
             
         } catch (FileNotFoundException ex) {
             //error
